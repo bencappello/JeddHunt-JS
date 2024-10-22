@@ -37906,34 +37906,35 @@ var _Game2 = _interopRequireDefault(_Game);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener('DOMContentLoaded', function () {
+  console.log("DOMContentLoaded event fired, adding start screen");
 
-// Add a start screen overlay
-var startScreen = document.createElement('div');
-startScreen.id = 'startScreen';
-startScreen.innerHTML = '<h1>Click to Start the Game</h1>';
-startScreen.style.position = 'fixed';
-startScreen.style.top = '0';
-startScreen.style.left = '0';
-startScreen.style.width = '100vw';
-startScreen.style.height = '100vh';
-startScreen.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-startScreen.style.display = 'flex';
-startScreen.style.justifyContent = 'center';
-startScreen.style.alignItems = 'center';
-startScreen.style.color = 'white';
-startScreen.style.fontSize = '2rem';
-startScreen.style.cursor = 'pointer';
-document.body.appendChild(startScreen);
+  // Add a start screen overlay
+  var startScreen = document.createElement('div');
+  startScreen.id = 'startScreen';
+  startScreen.innerHTML = '<h1>Click to Start the Game</h1>';
+  startScreen.style.position = 'fixed';
+  startScreen.style.top = '0';
+  startScreen.style.left = '0';
+  startScreen.style.width = '100vw';
+  startScreen.style.height = '100vh';
+  startScreen.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+  startScreen.style.display = 'flex';
+  startScreen.style.justifyContent = 'center';
+  startScreen.style.alignItems = 'center';
+  startScreen.style.color = 'white';
+  startScreen.style.fontSize = '2rem';
+  startScreen.style.cursor = 'pointer';
+  document.body.appendChild(startScreen);
 
-// Event listener to remove the start screen and start the game
-startScreen.addEventListener('click', function () {
-  document.body.removeChild(startScreen); // Remove start screen when clicked
+  // Event listener to remove the start screen and start the game
+  startScreen.addEventListener('click', function () {
+    document.body.removeChild(startScreen); // Remove start screen when clicked
 
-  // Start the game after the start screen is clicked
-  var game = new _Game2.default({
-    spritesheet: 'sprites.json'
-  }).load();
-}, false);
+    // Start the game after the start screen is clicked
+    var game = new _Game2.default({
+      spritesheet: 'sprites.json'
+    }).load();
+  }, false);
 
 }, false);
 
