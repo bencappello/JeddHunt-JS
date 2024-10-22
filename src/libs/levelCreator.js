@@ -19,5 +19,7 @@ module.exports.parseLevelQueryString = function() {
 };
 
 module.exports.urlContainsLevelData = function() {
-  return window.location.href.indexOf('?') !== -1;
+  const queryParams = new URLSearchParams(window.location.search);
+
+  return window.location.href.indexOf('?') !== -1 && !queryParams.has('wmode');
 };
