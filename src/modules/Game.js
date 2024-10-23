@@ -259,10 +259,66 @@ class Game {
     this.addMuteLink();
     this.addFullscreenLink();
     this.bindEvents();
+
+    this.showStartScreen();
+  }
+
+  showStartScreen() {
+    // Create a div element for the start screen
+    const startScreen = document.createElement('div');
+    startScreen.id = 'startScreen';
+    startScreen.style.position = 'fixed';
+    startScreen.style.top = '0';
+    startScreen.style.left = '0';
+    startScreen.style.width = '100vw';
+    startScreen.style.height = '100vh';
+    startScreen.style.backgroundImage = 'url("start-screen.jpeg")';
+    startScreen.style.backgroundSize = 'cover';
+    startScreen.style.backgroundPosition = 'center';
+    startScreen.style.cursor = 'pointer';
+    document.body.appendChild(startScreen);
+
+
+
+
+    // Create a new AudioContext to check if sounds are allowed
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Function to check if sounds are enabled
+    function areSoundsEnabled() {
+      return audioContext.state === 'running';  // 'running' means sounds are enabled
+    }
+
+    // Function to resume sounds after user interaction
+    function enableSounds() {
+      if (audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+          console.log("Sounds are now enabled.");
+        });
+      }
+    }
+
+    // Play the start screen music
+    this.startScreenMusicId = sound.play('startScreen');
+  
+    // Start the game when the start screen is clicked
+    startScreen.addEventListener('click', () => {
+      this.startGameFromStartScreen(startScreen);
+    }, false);
+  }
+  
+  startGameFromStartScreen(startScreen) {
+    // Stop the start screen music
+    sound.stop(this.startScreenMusicId);
+  
+    // Remove the start screen
+    document.body.removeChild(startScreen);
+  
+    // Continue the game as usual
     this.startLevel();
     this.animate();
-
   }
+  
 
   addFullscreenLink() {
     this.stage.hud.createTextBox('fullscreenLink', {
