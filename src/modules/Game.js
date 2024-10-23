@@ -10,8 +10,8 @@ const BLUE_SKY_COLOR = 0x64b0ff;
 const PINK_SKY_COLOR = 0xfbb4d4;
 const SUCCESS_RATIO = 0.6;
 const BOTTOM_LINK_STYLE = {
-  fontFamily: 'Pixelify Sans',
-  fontSize: '16px',
+  fontFamily: 'Press Start 2P',
+  fontSize: '15px',
   align: 'left',
   fill: 'white'
 };
@@ -145,7 +145,7 @@ class Game {
       if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'score')) {
         this.stage.hud.createTextBox('score', {
           style: {
-            fontFamily: 'Pixelify Sans',
+            fontFamily: 'Press Start 2P',
             fontSize: '18px',
             align: 'left',
             fill: 'white'
@@ -186,7 +186,7 @@ class Game {
       if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'waveStatus')) {
         this.stage.hud.createTextBox('waveStatus', {
           style: {
-            fontFamily: 'Pixelify Sans',
+            fontFamily: 'Press Start 2P',
             fontSize: '14px',
             align: 'center',
             fill: 'white'
@@ -227,7 +227,7 @@ class Game {
       if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'gameStatus')) {
         this.stage.hud.createTextBox('gameStatus', {
           style: {
-            fontFamily: 'Pixelify Sans',
+            fontFamily: 'Press Start 2P',
             fontSize: '40px',
             align: 'left',
             fill: 'white'
@@ -340,7 +340,7 @@ class Game {
         y: 1
       }
     });
-    this.stage.hud.muteLink = 'mute (m)';
+    this.stage.hud.muteLink = 'mute(m)';
   }
 
   addPauseLink() {
@@ -352,7 +352,7 @@ class Game {
         y: 1
       }
     });
-    this.stage.hud.pauseLink = 'pause (p)';
+    this.stage.hud.pauseLink = 'pause(p)';
   }
 
   addLinkToLevelCreator() {
@@ -415,7 +415,7 @@ class Game {
   }
 
   pause() {
-    this.stage.hud.pauseLink = this.paused ? 'pause (p)' : 'unpause (p)';
+    this.stage.hud.pauseLink = this.paused ? 'pause(p)' : 'unpause(p)';
     // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
     // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
     setTimeout(() => {

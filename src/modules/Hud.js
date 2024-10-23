@@ -28,7 +28,7 @@ class Hud extends Container {
     // set defaults, and allow them to be overwritten
     const options = _extend({
       style: {
-        fontFamily: 'Pixelify Sans',
+        fontFamily: 'Press Start 2P',
         fontSize: '18px',
         align: 'left',
         fill: 'white'
