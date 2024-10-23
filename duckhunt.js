@@ -37294,6 +37294,63 @@ var Game = function () {
       this.addMuteLink();
       this.addFullscreenLink();
       this.bindEvents();
+
+      this.showStartScreen();
+    }
+  }, {
+    key: 'showStartScreen',
+    value: function showStartScreen() {
+      var _this = this;
+
+      // Create a div element for the start screen
+      var startScreen = document.createElement('div');
+      startScreen.id = 'startScreen';
+      startScreen.style.position = 'fixed';
+      startScreen.style.top = '0';
+      startScreen.style.left = '0';
+      startScreen.style.width = '100vw';
+      startScreen.style.height = '100vh';
+      startScreen.style.backgroundImage = 'url("start-screen.jpeg")';
+      startScreen.style.backgroundSize = 'cover';
+      startScreen.style.backgroundPosition = 'center';
+      startScreen.style.cursor = 'pointer';
+      document.body.appendChild(startScreen);
+
+      // Create a new AudioContext to check if sounds are allowed
+      var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+      // Function to check if sounds are enabled
+      function areSoundsEnabled() {
+        return audioContext.state === 'running'; // 'running' means sounds are enabled
+      }
+
+      // Function to resume sounds after user interaction
+      function enableSounds() {
+        if (audioContext.state === 'suspended') {
+          audioContext.resume().then(function () {
+            console.log("Sounds are now enabled.");
+          });
+        }
+      }
+
+      // Play the start screen music
+      this.startScreenMusicId = _Sound2.default.play('startScreen');
+
+      // Start the game when the start screen is clicked
+      startScreen.addEventListener('click', function () {
+        _this.startGameFromStartScreen(startScreen);
+      }, false);
+    }
+  }, {
+    key: 'startGameFromStartScreen',
+    value: function startGameFromStartScreen(startScreen) {
+      // Stop the start screen music
+      _Sound2.default.stop(this.startScreenMusicId);
+
+      // Remove the start screen
+      document.body.removeChild(startScreen);
+
+      // Continue the game as usual
       this.startLevel();
       this.animate();
     }
@@ -37352,7 +37409,7 @@ var Game = function () {
   }, {
     key: 'bindEvents',
     value: function bindEvents() {
-      var _this = this;
+      var _this2 = this;
 
       window.addEventListener('resize', this.scaleToWindow.bind(this));
 
@@ -37362,33 +37419,33 @@ var Game = function () {
         event.stopImmediatePropagation();
 
         if (event.key === 'p') {
-          _this.pause();
+          _this2.pause();
         }
 
         if (event.key === 'm') {
-          _this.mute();
+          _this2.mute();
         }
 
         if (event.key === 'c') {
-          _this.openLevelCreator();
+          _this2.openLevelCreator();
         }
 
         if (event.key === 'f') {
-          _this.fullscreen();
+          _this2.fullscreen();
         }
       });
 
       document.addEventListener('fullscreenchange', function () {
         if (document.fullscreenElement) {
-          _this.stage.hud.fullscreenLink = 'unfullscreen (f)';
+          _this2.stage.hud.fullscreenLink = 'unfullscreen (f)';
         } else {
-          _this.stage.hud.fullscreenLink = 'fullscreen (f)';
+          _this2.stage.hud.fullscreenLink = 'fullscreen (f)';
         }
       });
 
       _Sound2.default.on('play', function (soundId) {
-        if (_this.activeSounds.indexOf(soundId) === -1) {
-          _this.activeSounds.push(soundId);
+        if (_this2.activeSounds.indexOf(soundId) === -1) {
+          _this2.activeSounds.push(soundId);
         }
       });
       _Sound2.default.on('stop', this.removeActiveSound.bind(this));
@@ -37403,23 +37460,23 @@ var Game = function () {
   }, {
     key: 'pause',
     value: function pause() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.stage.hud.pauseLink = this.paused ? 'pause (p)' : 'unpause (p)';
       // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
       // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
       setTimeout(function () {
-        _this2.paused = !_this2.paused;
-        if (_this2.paused) {
-          _this2.pauseStartTime = Date.now();
-          _this2.stage.pause();
-          _this2.activeSounds.forEach(function (soundId) {
+        _this3.paused = !_this3.paused;
+        if (_this3.paused) {
+          _this3.pauseStartTime = Date.now();
+          _this3.stage.pause();
+          _this3.activeSounds.forEach(function (soundId) {
             _Sound2.default.pause(soundId);
           });
         } else {
-          _this2.timePaused += (Date.now() - _this2.pauseStartTime) / 1000;
-          _this2.stage.resume();
-          _this2.activeSounds.forEach(function (soundId) {
+          _this3.timePaused += (Date.now() - _this3.pauseStartTime) / 1000;
+          _this3.stage.resume();
+          _this3.activeSounds.forEach(function (soundId) {
             _Sound2.default.play(soundId);
           });
         }
@@ -37448,7 +37505,7 @@ var Game = function () {
   }, {
     key: 'startLevel',
     value: function startLevel() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (_levelCreator2.default.urlContainsLevelData()) {
         this.level = _levelCreator2.default.parseLevelQueryString();
@@ -37464,8 +37521,8 @@ var Game = function () {
 
       this.gameStatus = this.level.title;
       this.stage.preLevelAnimation().then(function () {
-        _this3.gameStatus = '';
-        _this3.startWave();
+        _this4.gameStatus = '';
+        _this4.startWave();
       });
     }
   }, {
@@ -37908,40 +37965,12 @@ var _Game2 = _interopRequireDefault(_Game);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   console.log("DOMContentLoaded event fired, adding start screen");
-
-//   let game = new Game({
-//     spritesheet: 'sprites.json'
-//   }).load();
-
-// }, false);
-
 document.addEventListener('DOMContentLoaded', function () {
+  console.log("DOMContentLoaded event fired, adding start screen");
 
-  // Add a start screen with a background image from the dist folder
-  var startScreen = document.createElement('div');
-  startScreen.id = 'startScreen';
-  startScreen.style.position = 'fixed';
-  startScreen.style.top = '0';
-  startScreen.style.left = '0';
-  startScreen.style.width = '100vw';
-  startScreen.style.height = '100vh';
-  startScreen.style.backgroundImage = 'url("start-screen.jpeg")'; // Path to the image in the dist folder
-  startScreen.style.backgroundSize = 'cover'; // Ensure the image covers the entire screen
-  startScreen.style.backgroundPosition = 'center'; // Center the image
-  startScreen.style.cursor = 'pointer'; // Make the screen clickable
-  document.body.appendChild(startScreen);
-
-  // Start the game when the user clicks the start screen
-  startScreen.addEventListener('click', function () {
-    document.body.removeChild(startScreen); // Remove start screen when clicked
-
-    // Start the game after the start screen is clicked
-    var game = new _Game2.default({
-      spritesheet: 'sprites.json'
-    }).load();
-  }, false);
+  var game = new _Game2.default({
+    spritesheet: 'sprites.json'
+  }).load();
 }, false);
 
 /***/ }),
@@ -48909,7 +48938,7 @@ const TweenMaxBase = TweenMax;
 /* 324 */
 /***/ (function(module, exports) {
 
-module.exports = {"src":["audio.ogg","audio.mp3"],"sprite":{"barkDucks":[0,6988.820861678004],"champ":[8000,6479.433106575964],"gunSound":[16000,614.9433106575976],"laugh":[18000,2012.49433106576],"loserSound":[22000,5264.739229024944],"ohYeah":[29000,301.4739229024954],"quacking":[31000,6817.959183673466,true],"quak":[39000,783.6734693877575],"sniff":[41000,1985.306122448982,true],"thud":[44000,223.10657596371897]}}
+module.exports = {"src":["audio.ogg","audio.mp3"],"sprite":{"barkDucks":[0,5774.126984126984],"champ":[7000,6479.433106575964],"gunSound":[15000,614.9433106575959],"laugh":[17000,2012.49433106576],"loserSound":[21000,5264.739229024944],"ohYeah":[28000,301.4739229024954],"quacking":[30000,6817.959183673466,true],"quak":[38000,783.6734693877575],"sniff":[40000,1985.306122448982,true],"startScreen":[43000,4781.473922902493],"thud":[49000,223.10657596371897]}}
 
 /***/ }),
 /* 325 */
