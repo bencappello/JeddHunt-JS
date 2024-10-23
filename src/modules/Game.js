@@ -254,10 +254,10 @@ class Game {
     });
 
     this.scaleToWindow();
-    this.addLinkToLevelCreator();
+    // this.addLinkToLevelCreator();
     this.addPauseLink();
     this.addMuteLink();
-    this.addFullscreenLink();
+    // this.addFullscreenLink();
     this.bindEvents();
 
     this.showStartScreen();
@@ -383,9 +383,9 @@ class Game {
         this.mute();
       }
 
-      if (event.key === 'c') {
-        this.openLevelCreator();
-      }
+      // if (event.key === 'c') {
+      //   this.openLevelCreator();
+      // }
 
       if (event.key === 'f') {
         this.fullscreen();
@@ -600,11 +600,11 @@ class Game {
   }
 
   openLevelCreator() {
-    // If they didn't pause the game, pause it for them
-    if (!this.paused) {
-      this.pause();
-    }
-    window.open('/creator.html', '_blank');
+    // // If they didn't pause the game, pause it for them
+    // if (!this.paused) {
+    //   this.pause();
+    // }
+    // window.open('/creator.html', '_blank');
   }
 
   handleClick(event) {
@@ -628,10 +628,10 @@ class Game {
       return;
     }
 
-    if (this.stage.clickedLevelCreatorLink(clickPoint)) {
-      this.openLevelCreator();
-      return;
-    }
+    // if (this.stage.clickedLevelCreatorLink(clickPoint)) {
+    //   this.openLevelCreator();
+    //   return;
+    // }
 
     if (!this.stage.hud.replayButton && !this.outOfAmmo() && !this.shouldWaveEnd() && !this.paused) {
       sound.play('gunSound');
