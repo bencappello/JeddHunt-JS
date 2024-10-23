@@ -10,8 +10,8 @@ const BLUE_SKY_COLOR = 0x64b0ff;
 const PINK_SKY_COLOR = 0xfbb4d4;
 const SUCCESS_RATIO = 0.6;
 const BOTTOM_LINK_STYLE = {
-  fontFamily: 'Arial',
-  fontSize: '15px',
+  fontFamily: 'Pixelify Sans',
+  fontSize: '16px',
   align: 'left',
   fill: 'white'
 };
@@ -145,7 +145,7 @@ class Game {
       if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'score')) {
         this.stage.hud.createTextBox('score', {
           style: {
-            fontFamily: 'Arial',
+            fontFamily: 'Pixelify Sans',
             fontSize: '18px',
             align: 'left',
             fill: 'white'
@@ -186,7 +186,7 @@ class Game {
       if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'waveStatus')) {
         this.stage.hud.createTextBox('waveStatus', {
           style: {
-            fontFamily: 'Arial',
+            fontFamily: 'Pixelify Sans',
             fontSize: '14px',
             align: 'center',
             fill: 'white'
@@ -227,7 +227,7 @@ class Game {
       if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'gameStatus')) {
         this.stage.hud.createTextBox('gameStatus', {
           style: {
-            fontFamily: 'Arial',
+            fontFamily: 'Pixelify Sans',
             fontSize: '40px',
             align: 'left',
             fill: 'white'
