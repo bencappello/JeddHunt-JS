@@ -38049,8 +38049,8 @@ var BLUE_SKY_COLOR = 0x64b0ff;
 var PINK_SKY_COLOR = 0xfbb4d4;
 var SUCCESS_RATIO = 0.6;
 var BOTTOM_LINK_STYLE = {
-  fontFamily: 'Pixelify Sans',
-  fontSize: '16px',
+  fontFamily: 'Press Start 2P',
+  fontSize: '15px',
   align: 'left',
   fill: 'white'
 };
@@ -38187,7 +38187,7 @@ var Game = function () {
           y: 1
         }
       });
-      this.stage.hud.muteLink = 'mute (m)';
+      this.stage.hud.muteLink = 'mute(m)';
     }
   }, {
     key: 'addPauseLink',
@@ -38200,7 +38200,7 @@ var Game = function () {
           y: 1
         }
       });
-      this.stage.hud.pauseLink = 'pause (p)';
+      this.stage.hud.pauseLink = 'pause(p)';
     }
   }, {
     key: 'addLinkToLevelCreator',
@@ -38271,7 +38271,7 @@ var Game = function () {
     value: function pause() {
       var _this3 = this;
 
-      this.stage.hud.pauseLink = this.paused ? 'pause (p)' : 'unpause (p)';
+      this.stage.hud.pauseLink = this.paused ? 'pause(p)' : 'unpause(p)';
       // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
       // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
       setTimeout(function () {
@@ -38653,7 +38653,7 @@ var Game = function () {
         if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'score')) {
           this.stage.hud.createTextBox('score', {
             style: {
-              fontFamily: 'Pixelify Sans',
+              fontFamily: 'Press Start 2P',
               fontSize: '18px',
               align: 'left',
               fill: 'white'
@@ -38697,7 +38697,7 @@ var Game = function () {
         if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'waveStatus')) {
           this.stage.hud.createTextBox('waveStatus', {
             style: {
-              fontFamily: 'Pixelify Sans',
+              fontFamily: 'Press Start 2P',
               fontSize: '14px',
               align: 'center',
               fill: 'white'
@@ -38742,7 +38742,7 @@ var Game = function () {
         if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'gameStatus')) {
           this.stage.hud.createTextBox('gameStatus', {
             style: {
-              fontFamily: 'Pixelify Sans',
+              fontFamily: 'Press Start 2P',
               fontSize: '40px',
               align: 'left',
               fill: 'white'
@@ -39483,7 +39483,7 @@ var Hud = function (_Container) {
       // set defaults, and allow them to be overwritten
       var options = (0, _object.assign)({
         style: {
-          fontFamily: 'Pixelify Sans',
+          fontFamily: 'Press Start 2P',
           fontSize: '18px',
           align: 'left',
           fill: 'white'
@@ -39622,7 +39622,7 @@ var HUD_LOCATIONS = {
   SCORE: new _pixi.Point(MAX_X - 10, 10),
   WAVE_STATUS: new _pixi.Point(MAX_X - 11, MAX_Y - 30),
   PAUSE_LINK: new _pixi.Point(MAX_X - 11, MAX_Y - 10),
-  MUTE_LINK: new _pixi.Point(MAX_X - 90, MAX_Y - 10),
+  MUTE_LINK: new _pixi.Point(MAX_X - 170, MAX_Y - 10),
   LEVEL_CREATOR_LINK: new _pixi.Point(MAX_X - 318, MAX_Y - 10),
   FULL_SCREEN_LINK: new _pixi.Point(MAX_X - 236, MAX_Y - 10),
   GAME_STATUS: new _pixi.Point(MAX_X / 2, MAX_Y * 0.45),
