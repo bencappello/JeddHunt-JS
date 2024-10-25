@@ -26,14 +26,10 @@ gulp.task('audio', gulp.parallel(function(cb) {
 }));
 
 gulp.task('images', gulp.parallel(function(){
-  // There is a texturepacker template for spritesmith but it doesn't work
-  // well with complex directory structures, so instead we use the shell
-  // checking TexturePacker --version first ensures it bails if TexturePacker
-  // isn't installed
   return gulp.src('*', {read:false})
     .pipe(shell([
       'TexturePacker --version || echo ERROR: TexturePacker not found, install TexturePacker',
-      'TexturePacker --disable-rotation --data dist/sprites.json --format json --sheet dist/sprites.png src/assets/images'
+      'TexturePacker --disable-rotation --algorithm Basic --extrude 0 --no-trim --disable-auto-alias --png-opt-level 0 --data dist/sprites.json --format json --sheet dist/sprites.png src/assets/images'
     ]))
     .pipe(connect.reload());
 }));
@@ -41,8 +37,8 @@ gulp.task('images', gulp.parallel(function(){
 gulp.task('deploy', gulp.parallel(function() {
   return gulp.src('*', {read:false})
     .pipe(shell([
-    'aws --profile duckhunt s3 sync dist/ s3://duckhuntjs.com --include \'*\' --acl \'public-read\''
-  ]));
+      'aws --profile duckhunt s3 sync dist/ s3://duckhuntjs.com --include \'*\' --acl \'public-read\''
+    ]));
 }));
 
 gulp.task('default', gulp.parallel('images', 'audio'));
