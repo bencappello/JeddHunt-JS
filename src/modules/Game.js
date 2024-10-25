@@ -200,7 +200,7 @@ class Game {
       }
 
       if (!isNaN(val) && val > 0) {
-        this.stage.hud.waveStatus = 'wave ' + val + ' of ' + this.level.waves;
+        this.stage.hud.waveStatus = 'Wave ' + val + ' of ' + this.level.waves;
       } else {
         this.stage.hud.waveStatus = '';
       }
@@ -340,7 +340,7 @@ class Game {
         y: 1
       }
     });
-    this.stage.hud.muteLink = 'mute(m)';
+    this.stage.hud.muteLink = '(m)ute';
   }
 
   addPauseLink() {
@@ -352,7 +352,7 @@ class Game {
         y: 1
       }
     });
-    this.stage.hud.pauseLink = 'pause(p)';
+    this.stage.hud.pauseLink = '(p)ause';
   }
 
   addLinkToLevelCreator() {
@@ -415,7 +415,7 @@ class Game {
   }
 
   pause() {
-    this.stage.hud.pauseLink = this.paused ? 'pause(p)' : 'unpause(p)';
+    this.stage.hud.pauseLink = this.paused ? '(p)ause' : '(p)ause';
     // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
     // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
     setTimeout(() => {
@@ -443,7 +443,7 @@ class Game {
   }
 
   mute() {
-    this.stage.hud.muteLink = this.muted ? 'mute (m)' : 'unmute (m)';
+    this.stage.hud.muteLink = this.muted ? '(m)ute' : 'unmute (m)';
     this.muted = !this.muted;
     sound.mute(this.muted);
   }
@@ -550,13 +550,13 @@ class Game {
 
   win() {
     sound.play('champ');
-    this.gameStatus = 'You Win!';
+    this.gameStatus = 'YOU WON!';
     this.showReplay(this.getScoreMessage());
   }
 
   loss() {
     sound.play('loserSound');
-    this.gameStatus = 'You Lose!';
+    this.gameStatus = 'YOU LOSE.';
     this.showReplay(this.getScoreMessage());
   }
 
@@ -565,28 +565,12 @@ class Game {
 
     const percentage = (this.score / this.maxScore) * 100;
 
-    if (percentage === 100) {
-      scoreMessage = 'Flawless victory.';
-    }
-
-    if (percentage < 100) {
-      scoreMessage = 'Close to perfection.';
-    }
-
-    if (percentage <= 95) {
-      scoreMessage = 'Truly impressive score.';
-    }
-
-    if (percentage <= 85) {
-      scoreMessage = 'Solid score.';
-    }
-
-    if (percentage <= 75) {
-      scoreMessage = 'Participation award.';
+    if (percentage <= 100) {
+      scoreMessage = 'AS MUCH AS YOU CAN WIN AT\nA GAME CALLED JEDD HUNT. ';
     }
 
     if (percentage <= 63) {
-      scoreMessage = 'Yikes.';
+      scoreMessage = 'AS MUCH AS YOU CAN LOSE AT\nA GAME CALLED JEDD HUNT.';
     }
 
     return scoreMessage;
@@ -596,7 +580,7 @@ class Game {
     this.stage.hud.createTextBox('replayButton', {
       location: Stage.replayButtonLocation()
     });
-    this.stage.hud.replayButton = replayText + ' Play Again?';
+    this.stage.hud.replayButton = replayText + '\n\nPlay Again?';
   }
 
   openLevelCreator() {

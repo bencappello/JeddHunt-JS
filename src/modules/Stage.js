@@ -24,7 +24,7 @@ const HUD_LOCATIONS = {
   SCORE: new Point(MAX_X - 10, 10),
   WAVE_STATUS: new Point(MAX_X - 11, MAX_Y - 30),
   PAUSE_LINK: new Point(MAX_X - 11, MAX_Y - 10),
-  MUTE_LINK: new Point(MAX_X - 170, MAX_Y - 10),
+  MUTE_LINK: new Point(MAX_X - 130, MAX_Y - 10),
   LEVEL_CREATOR_LINK: new Point(MAX_X - 318, MAX_Y - 10),
   FULL_SCREEN_LINK: new Point(MAX_X - 236, MAX_Y - 10),
   GAME_STATUS: new Point(MAX_X / 2, MAX_Y * 0.45),
