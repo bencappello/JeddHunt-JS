@@ -38187,7 +38187,7 @@ var Game = function () {
           y: 1
         }
       });
-      this.stage.hud.muteLink = 'mute(m)';
+      this.stage.hud.muteLink = '(m)ute';
     }
   }, {
     key: 'addPauseLink',
@@ -38200,7 +38200,7 @@ var Game = function () {
           y: 1
         }
       });
-      this.stage.hud.pauseLink = 'pause(p)';
+      this.stage.hud.pauseLink = '(p)ause';
     }
   }, {
     key: 'addLinkToLevelCreator',
@@ -38271,7 +38271,7 @@ var Game = function () {
     value: function pause() {
       var _this3 = this;
 
-      this.stage.hud.pauseLink = this.paused ? 'pause(p)' : 'unpause(p)';
+      this.stage.hud.pauseLink = this.paused ? '(p)ause' : '(p)ause';
       // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
       // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
       setTimeout(function () {
@@ -38301,7 +38301,7 @@ var Game = function () {
   }, {
     key: 'mute',
     value: function mute() {
-      this.stage.hud.muteLink = this.muted ? 'mute (m)' : 'unmute (m)';
+      this.stage.hud.muteLink = this.muted ? '(m)ute' : 'unmute (m)';
       this.muted = !this.muted;
       _Sound2.default.mute(this.muted);
     }
@@ -38423,14 +38423,14 @@ var Game = function () {
     key: 'win',
     value: function win() {
       _Sound2.default.play('champ');
-      this.gameStatus = 'You Win!';
+      this.gameStatus = 'YOU WON!';
       this.showReplay(this.getScoreMessage());
     }
   }, {
     key: 'loss',
     value: function loss() {
       _Sound2.default.play('loserSound');
-      this.gameStatus = 'You Lose!';
+      this.gameStatus = 'YOU LOSE.';
       this.showReplay(this.getScoreMessage());
     }
   }, {
@@ -38440,28 +38440,12 @@ var Game = function () {
 
       var percentage = this.score / this.maxScore * 100;
 
-      if (percentage === 100) {
-        scoreMessage = 'Flawless victory.';
-      }
-
-      if (percentage < 100) {
-        scoreMessage = 'Close to perfection.';
-      }
-
-      if (percentage <= 95) {
-        scoreMessage = 'Truly impressive score.';
-      }
-
-      if (percentage <= 85) {
-        scoreMessage = 'Solid score.';
-      }
-
-      if (percentage <= 75) {
-        scoreMessage = 'Participation award.';
+      if (percentage <= 100) {
+        scoreMessage = 'AS MUCH AS YOU CAN WIN AT\nA GAME CALLED JEDD HUNT. ';
       }
 
       if (percentage <= 63) {
-        scoreMessage = 'Yikes.';
+        scoreMessage = 'AS MUCH AS YOU CAN LOSE AT\nA GAME CALLED JEDD HUNT.';
       }
 
       return scoreMessage;
@@ -38472,7 +38456,7 @@ var Game = function () {
       this.stage.hud.createTextBox('replayButton', {
         location: _Stage2.default.replayButtonLocation()
       });
-      this.stage.hud.replayButton = replayText + ' Play Again?';
+      this.stage.hud.replayButton = replayText + '\n\nPlay Again?';
     }
   }, {
     key: 'openLevelCreator',
@@ -38711,7 +38695,7 @@ var Game = function () {
         }
 
         if (!isNaN(val) && val > 0) {
-          this.stage.hud.waveStatus = 'wave ' + val + ' of ' + this.level.waves;
+          this.stage.hud.waveStatus = 'Wave ' + val + ' of ' + this.level.waves;
         } else {
           this.stage.hud.waveStatus = '';
         }
@@ -39622,7 +39606,7 @@ var HUD_LOCATIONS = {
   SCORE: new _pixi.Point(MAX_X - 10, 10),
   WAVE_STATUS: new _pixi.Point(MAX_X - 11, MAX_Y - 30),
   PAUSE_LINK: new _pixi.Point(MAX_X - 11, MAX_Y - 10),
-  MUTE_LINK: new _pixi.Point(MAX_X - 170, MAX_Y - 10),
+  MUTE_LINK: new _pixi.Point(MAX_X - 130, MAX_Y - 10),
   LEVEL_CREATOR_LINK: new _pixi.Point(MAX_X - 318, MAX_Y - 10),
   FULL_SCREEN_LINK: new _pixi.Point(MAX_X - 236, MAX_Y - 10),
   GAME_STATUS: new _pixi.Point(MAX_X / 2, MAX_Y * 0.45),
@@ -50253,7 +50237,7 @@ module.exports = {"src":["audio.ogg","audio.mp3"],"sprite":{"barkDucks":[0,5774.
 /* 347 */
 /***/ (function(module, exports) {
 
-module.exports = {"normal":[{"id":1,"title":"Level 1","waves":3,"ducks":2,"pointsPerDuck":100,"speed":5,"bullets":3,"radius":60,"time":13},{"id":2,"title":"Level 2","waves":5,"ducks":3,"pointsPerDuck":100,"speed":6,"bullets":4,"radius":60,"time":10},{"id":3,"title":"Level 3","waves":6,"ducks":3,"pointsPerDuck":100,"speed":7,"bullets":4,"radius":60,"time":10},{"id":4,"title":"Level 4","waves":3,"ducks":10,"pointsPerDuck":100,"speed":7,"bullets":11,"radius":60,"time":18},{"id":5,"title":"Level 5","waves":5,"ducks":2,"pointsPerDuck":100,"speed":8,"bullets":3,"radius":60,"time":13},{"id":6,"title":"Level 6","waves":1,"ducks":15,"pointsPerDuck":100,"speed":8,"bullets":15,"radius":60,"time":25}]}
+module.exports = {"normal":[{"id":1,"title":"Level 1","waves":3,"ducks":2,"pointsPerDuck":100,"speed":5,"bullets":3,"radius":60,"time":13},{"id":2,"title":"Level 2","waves":5,"ducks":3,"pointsPerDuck":100,"speed":6,"bullets":4,"radius":60,"time":10},{"id":3,"title":"Level 3","waves":6,"ducks":3,"pointsPerDuck":100,"speed":7,"bullets":4,"radius":60,"time":10},{"id":4,"title":"Level 4","waves":3,"ducks":10,"pointsPerDuck":100,"speed":7,"bullets":11,"radius":60,"time":18},{"id":5,"title":"Level 5","waves":5,"ducks":2,"pointsPerDuck":100,"speed":8,"bullets":3,"radius":60,"time":13}]}
 
 /***/ }),
 /* 348 */
