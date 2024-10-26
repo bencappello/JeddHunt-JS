@@ -6,6 +6,31 @@ import sound from './Sound';
 import levelCreator from '../libs/levelCreator.js';
 import utils from '../libs/utils';
 
+
+
+import firebase from 'firebase/app';
+import 'firebase/database'; // Import the database module
+
+// Your web app's Firebase configuration (replace with your actual config)
+const firebaseConfig = {
+  apiKey: "AIzaSyCDp6ZHqbfZyzt-Ro_ObSTmXsHvIdNjm8c",
+  authDomain: "jeddhunt-js.firebaseapp.com",
+  databaseURL: "https://jeddhunt-js-default-rtdb.firebaseio.com",
+  projectId: "jeddhunt-js",
+  storageBucket: "jeddhunt-js.appspot.com",
+  messagingSenderId: "813925258701",
+  appId: "1:813925258701:web:2b2a903e0a0d2928e1a084",
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Get a reference to the database
+const database = firebase.database();
+
+
+
+
 const BLUE_SKY_COLOR = 0x64b0ff;
 const PINK_SKY_COLOR = 0xfbb4d4;
 const SUCCESS_RATIO = 0.6;
@@ -300,25 +325,324 @@ class Game {
 
     // Play the start screen music
     this.startScreenMusicId = sound.play('startScreen');
-  
+
     // Start the game when the start screen is clicked
     startScreen.addEventListener('click', () => {
       this.startGameFromStartScreen(startScreen);
     }, false);
   }
-  
+
   startGameFromStartScreen(startScreen) {
     // Stop the start screen music
     sound.stop(this.startScreenMusicId);
-  
+
     // Remove the start screen
     document.body.removeChild(startScreen);
-  
+
     // Continue the game as usual
     this.startLevel();
     this.animate();
   }
+
+  async getHighScores() {
+    try {
+      const highScoresRef = database.ref("highScores");
+      const snapshot = await highScoresRef.orderByChild("score").limitToLast(10).once("value");
   
+      const highScores = [];
+      snapshot.forEach((data) => {
+        highScores.push({
+          name: data.val().name,
+          score: data.val().score,
+        });
+      });
+  
+      // Sort high scores in descending order
+      return highScores.reverse();
+    } catch (error) {
+      console.error("Error fetching high scores:", error);
+      return [];
+    }
+  }
+
+  saveHighScore(score, playerName) {
+    const highScoresRef = firebase.database().ref("highScores");
+    const newScoreRef = highScoresRef.push();
+  
+    newScoreRef.set(
+      {
+        name: playerName,
+        score: score,
+      },
+      (error) => {
+        if (error) {
+          console.error("Error saving high score:", error);
+        } else {
+          console.log("High score saved successfully!");
+        }
+      }
+    );
+  }
+
+  // win() {
+  //   sound.play('champ');
+  //   this.gameStatus = 'YOU WON!';
+  //   this.showReplay(this.getScoreMessage());
+  // }
+
+  // loss() {
+  //   sound.play('loserSound');
+  //   this.gameStatus = 'YOU LOSE.';
+  //   this.showReplay(this.getScoreMessage());
+  // }
+
+  async win() {
+    sound.play("champ");
+    // this.gameStatus = "You Win!";
+  
+    // Show the win screen and proceed based on high score status
+    this.showEndGameScreen(
+      "YOU WON!\nAS MUCH AS YOU CAN WIN AT\nA GAME CALLED JEDD HUNT.",
+      async () => {
+        const highScores = await this.getHighScores();
+        if (this.isTopScore(this.score, highScores)) {
+          this.promptPlayerNameForHighScore(); // Prompt for initials if a top score was achieved
+        } else {
+          this.showHighScores(highScores); // Otherwise, just show high scores
+        }
+      }
+    );
+  }
+  
+  async loss() {
+    sound.play("loserSound");
+    // this.gameStatus = "You Lose";
+  
+    // Show the lose screen and then display the high scores page
+    this.showEndGameScreen(
+      "YOU LOSE\nAS MUCH AS YOU CAN LOSE AT\nA GAME CALLED JEDD HUNT.",
+      async () => {
+        const highScores = await this.getHighScores();
+        if (this.isTopScore(this.score, highScores)) {
+          this.promptPlayerNameForHighScore(); // Prompt for initials if a top score was achieved
+        } else {
+          this.showHighScores(highScores); // Otherwise, just show high scores
+        }
+      }
+    );
+  }
+
+  isTopScore(score, highScores) {
+    return highScores.length < 10 || score > highScores[highScores.length - 1].score;
+  }
+
+  promptPlayerNameForHighScore() {
+    // Create a div element for the name prompt
+    const namePrompt = document.createElement("div");
+    namePrompt.id = "namePrompt";
+    namePrompt.style.position = "fixed";
+    namePrompt.style.top = "0";
+    namePrompt.style.left = "0";
+    namePrompt.style.width = "100vw";
+    namePrompt.style.height = "100vh";
+    namePrompt.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+    namePrompt.style.color = "yellow";  // Bright, classic arcade color
+    namePrompt.style.display = "flex";
+    namePrompt.style.flexDirection = "column";
+    namePrompt.style.alignItems = "center";
+    namePrompt.style.justifyContent = "center";
+    namePrompt.style.fontFamily = "'Press Start 2P', sans-serif";  // Retro arcade font
+  
+    // High score title
+    const highScoreTitle = document.createElement("h2");
+    highScoreTitle.innerText = "HIGH SCORE!";
+    highScoreTitle.style.marginBottom = "10px";
+    highScoreTitle.style.textShadow = "2px 2px 4px #ff0000";  // Red shadow for retro effect
+  
+    // Display the player's score
+    const scoreDisplay = document.createElement("div");
+    scoreDisplay.innerText = `SCORE: ${this.score}`;
+    scoreDisplay.style.marginBottom = "20px";
+    scoreDisplay.style.fontSize = "28px";
+    scoreDisplay.style.textShadow = "2px 2px 4px #000";  // Black shadow for readability
+  
+    // Title for entering initials
+    const initialsTitle = document.createElement("h2");
+    initialsTitle.innerText = "ENTER YOUR INITIALS";
+    initialsTitle.style.marginBottom = "20px";
+    initialsTitle.style.textShadow = "2px 2px 4px #ff0000";  // Red shadow for retro effect
+  
+    const inputWrapper = document.createElement("div");
+    inputWrapper.style.marginTop = "20px";
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.placeholder = "AAA";
+    nameInput.maxLength = 3;  // Limit to 3 characters
+    nameInput.style.textTransform = "uppercase"; // Convert input to uppercase
+    nameInput.style.fontFamily = "'Press Start 2P', sans-serif";  // Retro font
+    nameInput.style.fontSize = "24px";
+    nameInput.style.textAlign = "center";
+    nameInput.style.backgroundColor = "black";
+    nameInput.style.color = "lime";  // Classic arcade bright green color
+    nameInput.style.border = "4px solid yellow";  // Bold yellow border
+    nameInput.style.padding = "10px";
+    nameInput.style.marginRight = "10px";
+    nameInput.style.width = "80px";  // Make it visually fit 3 characters nicely
+  
+    const submitButton = document.createElement("button");
+    submitButton.textContent = "OK";
+    submitButton.style.fontFamily = "'Press Start 2P', sans-serif"; // Retro arcade font
+    submitButton.style.fontSize = "18px";
+    submitButton.style.color = "white";
+    submitButton.style.backgroundColor = "black";
+    submitButton.style.border = "4px solid yellow";  // Bold yellow border
+    submitButton.style.padding = "10px 20px";
+    submitButton.style.cursor = "pointer";
+  
+    submitButton.addEventListener("click", async () => {
+      const playerName = (nameInput.value || "AAA").toUpperCase(); // Default to "AAA" if empty
+      await this.saveHighScore(this.score, playerName);
+  
+      document.body.removeChild(namePrompt);
+  
+      // Fetch the updated high scores and show them
+      const highScores = await this.getHighScores();
+      this.showHighScores(highScores);
+    });
+  
+    inputWrapper.appendChild(nameInput);
+    inputWrapper.appendChild(submitButton);
+    namePrompt.appendChild(highScoreTitle); // Add high score title
+    namePrompt.appendChild(scoreDisplay);   // Display the player's score
+    namePrompt.appendChild(initialsTitle);  // Add title for initials
+    namePrompt.appendChild(inputWrapper);
+    document.body.appendChild(namePrompt);
+  }
+
+  showEndGameScreen(message, nextStepCallback) {
+    // Create a div element for the end game screen
+    const endGameScreen = document.createElement("div");
+    endGameScreen.id = "endGameScreen";
+    endGameScreen.style.position = "fixed";
+    endGameScreen.style.top = "0";
+    endGameScreen.style.left = "0";
+    endGameScreen.style.width = "100vw";
+    endGameScreen.style.height = "100vh";
+    endGameScreen.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+    endGameScreen.style.color = "yellow";
+    endGameScreen.style.display = "flex";
+    endGameScreen.style.flexDirection = "column";
+    endGameScreen.style.alignItems = "center";
+    endGameScreen.style.justifyContent = "center";
+    endGameScreen.style.fontFamily = "'Press Start 2P', sans-serif";
+    endGameScreen.style.textAlign = "center";
+    endGameScreen.style.cursor = "pointer"; // Indicate that clicking is allowed
+  
+    // Display the end game message
+    const messageParts = message.split('\n'); // Split the message to handle line breaks
+    messageParts.forEach((part, index) => {
+      const messageElement = document.createElement("div");
+      messageElement.innerText = part;
+      messageElement.style.fontSize = index === 0 ? "36px" : "28px"; // Larger font for first line
+      messageElement.style.marginBottom = index === 0 ? "20px" : "10px"; // Add spacing between lines
+      messageElement.style.textShadow = "2px 2px 4px #ff0000"; // Red shadow for retro effect
+      endGameScreen.appendChild(messageElement);
+    });
+  
+    // Add the end game screen to the document
+    document.body.appendChild(endGameScreen);
+  
+    // Define the function to proceed to the next step
+    const proceedToNextStep = () => {
+      if (endGameScreen) {
+        document.body.removeChild(endGameScreen);
+      }
+      nextStepCallback();
+    };
+  
+    // Set up a timeout to proceed after 2 seconds
+    const timeoutId = setTimeout(proceedToNextStep, 6000);
+  
+    // Allow clicking anywhere on the screen to proceed immediately
+    endGameScreen.addEventListener("click", () => {
+      clearTimeout(timeoutId); // Clear the timeout if the user clicks
+      proceedToNextStep();
+    });
+  }  
+
+  showHighScores(highScores) {
+    // Create a div element for the high scores screen
+    const highScoresScreen = document.createElement("div");
+    highScoresScreen.id = "highScoresScreen";
+    highScoresScreen.style.position = "fixed";
+    highScoresScreen.style.top = "0";
+    highScoresScreen.style.left = "0";
+    highScoresScreen.style.width = "100vw";
+    highScoresScreen.style.height = "100vh";
+    highScoresScreen.style.backgroundColor = "rgba(0, 0, 0, 0.9)"; // Dark background to give retro feel
+    highScoresScreen.style.color = "yellow"; // Retro bright color
+    highScoresScreen.style.display = "flex";
+    highScoresScreen.style.flexDirection = "column";
+    highScoresScreen.style.alignItems = "center";
+    highScoresScreen.style.justifyContent = "center";
+    highScoresScreen.style.fontFamily = "'Press Start 2P', sans-serif"; // Retro arcade font
+    highScoresScreen.style.textAlign = "center";
+  
+    // High scores title
+    const title = document.createElement("h2");
+    title.innerText = "HIGH SCORES";
+    title.style.marginBottom = "20px";
+    title.style.textShadow = "2px 2px 4px #ff0000"; // Red shadow for retro effect
+    highScoresScreen.appendChild(title);
+  
+    // Display each high score
+    highScores.forEach((scoreEntry, index) => {
+      const scoreElement = document.createElement("div");
+      scoreElement.innerHTML = `${index + 1}. ${scoreEntry.name} - ${scoreEntry.score}`;
+      scoreElement.style.marginBottom = "15px"; // Add spacing between scores
+      scoreElement.style.fontSize = "24px";
+      scoreElement.style.textShadow = "2px 2px 4px #000"; // Black shadow for more readability
+      highScoresScreen.appendChild(scoreElement);
+    });
+  
+    // Add a replay button
+    const replayButton = document.createElement("button");
+    replayButton.textContent = "PLAY AGAIN";
+    replayButton.style.marginTop = "30px";
+    replayButton.style.width = "150px"; // Make the button prominent and retro-looking
+    replayButton.style.height = "50px";
+    replayButton.style.backgroundColor = "black";
+    replayButton.style.color = "yellow";
+    replayButton.style.border = "4px solid yellow"; // Bold yellow border for arcade look
+    replayButton.style.fontFamily = "'Press Start 2P', sans-serif"; // Set the font
+    replayButton.style.fontSize = "16px";
+    replayButton.style.cursor = "pointer";
+    replayButton.style.textTransform = "uppercase"; // Make button text all caps
+  
+    replayButton.addEventListener("click", () => {
+      document.body.removeChild(highScoresScreen);
+      window.location = window.location.pathname;
+    });
+  
+    highScoresScreen.appendChild(replayButton);
+  
+    // Add the high scores screen to the document
+    document.body.appendChild(highScoresScreen);
+  }  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   addFullscreenLink() {
     this.stage.hud.createTextBox('fullscreenLink', {
@@ -387,9 +711,9 @@ class Game {
       //   this.openLevelCreator();
       // }
 
-      if (event.key === 'f') {
-        this.fullscreen();
-      }
+      // if (event.key === 'f') {
+      //   this.fullscreen();
+      // }
     });
 
     document.addEventListener('fullscreenchange', () => {
@@ -546,18 +870,6 @@ class Game {
 
   levelWon() {
     return this.ducksShot > SUCCESS_RATIO * this.level.ducks * this.level.waves;
-  }
-
-  win() {
-    sound.play('champ');
-    this.gameStatus = 'YOU WON!';
-    this.showReplay(this.getScoreMessage());
-  }
-
-  loss() {
-    sound.play('loserSound');
-    this.gameStatus = 'YOU LOSE.';
-    this.showReplay(this.getScoreMessage());
   }
 
   getScoreMessage() {
