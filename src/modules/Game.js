@@ -225,7 +225,7 @@ class Game {
       }
 
       if (!isNaN(val) && val > 0) {
-        this.stage.hud.waveStatus = 'Wave ' + val + ' of ' + this.level.waves;
+        this.stage.hud.waveStatus = 'WAVE ' + val + ' OF ' + this.level.waves;
       } else {
         this.stage.hud.waveStatus = '';
       }
@@ -605,10 +605,15 @@ class Game {
       highScoresScreen.appendChild(scoreElement);
     });
   
+    // Buttons container
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.style.display = "flex";
+    buttonsContainer.style.gap = "20px";
+    buttonsContainer.style.marginTop = "30px";
+  
     // Add a replay button
     const replayButton = document.createElement("button");
     replayButton.textContent = "PLAY AGAIN";
-    replayButton.style.marginTop = "30px";
     replayButton.style.width = "150px"; // Make the button prominent and retro-looking
     replayButton.style.height = "50px";
     replayButton.style.backgroundColor = "black";
@@ -624,23 +629,35 @@ class Game {
       window.location = window.location.pathname;
     });
   
-    highScoresScreen.appendChild(replayButton);
-  
+    // Add a "Hire Jedd" button
+    const hireButton = document.createElement("button");
+    hireButton.textContent = "HIRE\nJEDD";
+    hireButton.style.width = "150px"; // Match the replay button size
+    hireButton.style.height = "50px";
+    hireButton.style.backgroundColor = "black";
+    hireButton.style.color = "yellow";
+    hireButton.style.border = "4px solid yellow"; // Bold yellow border for arcade look
+    hireButton.style.fontFamily = "'Press Start 2P', sans-serif"; // Set the font
+    hireButton.style.fontSize = "16px";
+    hireButton.style.cursor = "pointer";
+    hireButton.style.textTransform = "uppercase"; // Make button text all caps
+    hireButton.style.whiteSpace = "pre-wrap"; // Preserve line breaks in button text
+
+    // Create a mailto link for the button
+    const mailtoLink = document.createElement("a");
+    mailtoLink.href = "mailto:me@jeddlevine.com?subject=Hire%20Jedd";
+    mailtoLink.style.textDecoration = "none"; // Remove link styling
+    mailtoLink.appendChild(hireButton);
+
+    // Add buttons to the container
+    buttonsContainer.appendChild(replayButton);
+    buttonsContainer.appendChild(mailtoLink);
+    highScoresScreen.appendChild(buttonsContainer);
+
     // Add the high scores screen to the document
     document.body.appendChild(highScoresScreen);
-  }  
-
-
-
-
-
-
-
-
-
-
-
-
+  }
+  
 
 
 
@@ -664,7 +681,7 @@ class Game {
         y: 1
       }
     });
-    this.stage.hud.muteLink = '(m)ute';
+    this.stage.hud.muteLink = '(M)UTE';
   }
 
   addPauseLink() {
@@ -676,7 +693,7 @@ class Game {
         y: 1
       }
     });
-    this.stage.hud.pauseLink = '(p)ause';
+    this.stage.hud.pauseLink = '(P)AUSE';
   }
 
   addLinkToLevelCreator() {
@@ -739,7 +756,7 @@ class Game {
   }
 
   pause() {
-    this.stage.hud.pauseLink = this.paused ? '(p)ause' : '(p)ause';
+    this.stage.hud.pauseLink = this.paused ? '(P)AUSE' : '(P)AUSE';
     // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
     // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
     setTimeout(() => {
@@ -767,7 +784,7 @@ class Game {
   }
 
   mute() {
-    this.stage.hud.muteLink = this.muted ? '(m)ute' : 'unmute (m)';
+    this.stage.hud.muteLink = this.muted ? '(M)UTE' : 'UNMUTE (M)';
     this.muted = !this.muted;
     sound.mute(this.muted);
   }

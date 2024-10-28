@@ -2,7 +2,7 @@
   "normal": [
     {
       "id": 1,
-      "title": "Level 1",
+      "title": "LEVEL 1",
       "waves": 3,
       "ducks": 2,
       "pointsPerDuck": 100,
@@ -13,7 +13,7 @@
     },
     {
       "id": 2,
-      "title": "Level 2",
+      "title": "LEVEL 2",
       "waves": 5,
       "ducks": 3,
       "pointsPerDuck": 100,
@@ -24,7 +24,7 @@
     },
     {
       "id": 3,
-      "title": "Level 3",
+      "title": "LEVEL 3",
       "waves": 6,
       "ducks": 3,
       "pointsPerDuck": 100,
@@ -35,7 +35,7 @@
     },
     {
       "id": 4,
-      "title": "Level 4",
+      "title": "LEVEL 4",
       "waves": 3,
       "ducks": 10,
       "pointsPerDuck": 100,
@@ -46,7 +46,7 @@
     },
     {
       "id": 5,
-      "title": "Level 5",
+      "title": "LEVEL 5",
       "waves": 5,
       "ducks": 2,
       "pointsPerDuck": 100,
