@@ -41498,7 +41498,6 @@ _app2.default.initializeApp(firebaseConfig);
 
 // Get a reference to the database
 var database = _app2.default.database();
-
 var BLUE_SKY_COLOR = 0x64b0ff;
 var PINK_SKY_COLOR = 0xfbb4d4;
 var SUCCESS_RATIO = 0.6;
@@ -41859,52 +41858,79 @@ var Game = function () {
       highScoresScreen.style.left = "0";
       highScoresScreen.style.width = "100vw";
       highScoresScreen.style.height = "100vh";
-      highScoresScreen.style.backgroundColor = "rgba(0, 0, 0, 0.9)"; // Dark background to give retro feel
-      highScoresScreen.style.color = "yellow"; // Retro bright color
+      highScoresScreen.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+      highScoresScreen.style.color = "yellow";
       highScoresScreen.style.display = "flex";
       highScoresScreen.style.flexDirection = "column";
       highScoresScreen.style.alignItems = "center";
       highScoresScreen.style.justifyContent = "center";
-      highScoresScreen.style.fontFamily = "'Press Start 2P', sans-serif"; // Retro arcade font
+      highScoresScreen.style.fontFamily = "'Press Start 2P', sans-serif";
       highScoresScreen.style.textAlign = "center";
 
       // High scores title
       var title = document.createElement("h2");
       title.innerText = "HIGH SCORES";
       title.style.marginBottom = "20px";
-      title.style.textShadow = "2px 2px 4px #ff0000"; // Red shadow for retro effect
+      title.style.textShadow = "2px 2px 4px #ff0000";
       highScoresScreen.appendChild(title);
 
       // Display each high score
       highScores.forEach(function (scoreEntry, index) {
         var scoreElement = document.createElement("div");
         scoreElement.innerHTML = index + 1 + '. ' + scoreEntry.name + ' - ' + scoreEntry.score;
-        scoreElement.style.marginBottom = "15px"; // Add spacing between scores
+        scoreElement.style.marginBottom = "15px";
         scoreElement.style.fontSize = "24px";
-        scoreElement.style.textShadow = "2px 2px 4px #000"; // Black shadow for more readability
+        scoreElement.style.textShadow = "2px 2px 4px #000";
         highScoresScreen.appendChild(scoreElement);
       });
+
+      // Buttons container
+      var buttonsContainer = document.createElement("div");
+      buttonsContainer.style.display = "flex";
+      buttonsContainer.style.gap = "20px";
+      buttonsContainer.style.marginTop = "30px";
 
       // Add a replay button
       var replayButton = document.createElement("button");
       replayButton.textContent = "PLAY AGAIN";
-      replayButton.style.marginTop = "30px";
-      replayButton.style.width = "150px"; // Make the button prominent and retro-looking
+      replayButton.style.width = "150px";
       replayButton.style.height = "50px";
       replayButton.style.backgroundColor = "black";
       replayButton.style.color = "yellow";
-      replayButton.style.border = "4px solid yellow"; // Bold yellow border for arcade look
-      replayButton.style.fontFamily = "'Press Start 2P', sans-serif"; // Set the font
+      replayButton.style.border = "4px solid yellow";
+      replayButton.style.fontFamily = "'Press Start 2P', sans-serif";
       replayButton.style.fontSize = "16px";
       replayButton.style.cursor = "pointer";
-      replayButton.style.textTransform = "uppercase"; // Make button text all caps
+      replayButton.style.textTransform = "uppercase";
 
       replayButton.addEventListener("click", function () {
         document.body.removeChild(highScoresScreen);
         window.location = window.location.pathname;
       });
 
-      highScoresScreen.appendChild(replayButton);
+      // Add a "Hire Jedd" button
+      var hireButton = document.createElement("button");
+      hireButton.textContent = "HIRE\nJEDD";
+      hireButton.style.width = "150px";
+      hireButton.style.height = "50px";
+      hireButton.style.backgroundColor = "black";
+      hireButton.style.color = "yellow";
+      hireButton.style.border = "4px solid yellow";
+      hireButton.style.fontFamily = "'Press Start 2P', sans-serif";
+      hireButton.style.fontSize = "16px";
+      hireButton.style.cursor = "pointer";
+      hireButton.style.textTransform = "uppercase";
+      hireButton.style.whiteSpace = "pre-wrap";
+
+      // Add click event for opening the link in a new tab
+      hireButton.addEventListener("click", function () {
+        window.open("https://www.jeddlevine.com/contact", "_blank");
+      });
+
+      // Add buttons to the container
+      buttonsContainer.appendChild(replayButton);
+      buttonsContainer.appendChild(hireButton);
+      highScoresScreen.appendChild(buttonsContainer);
 
       // Add the high scores screen to the document
       document.body.appendChild(highScoresScreen);
@@ -41933,7 +41959,7 @@ var Game = function () {
           y: 1
         }
       });
-      this.stage.hud.muteLink = '(m)ute';
+      this.stage.hud.muteLink = '(M)UTE';
     }
   }, {
     key: 'addPauseLink',
@@ -41946,7 +41972,7 @@ var Game = function () {
           y: 1
         }
       });
-      this.stage.hud.pauseLink = '(p)ause';
+      this.stage.hud.pauseLink = '(P)AUSE';
     }
   }, {
     key: 'addLinkToLevelCreator',
@@ -42017,7 +42043,7 @@ var Game = function () {
     value: function pause() {
       var _this6 = this;
 
-      this.stage.hud.pauseLink = this.paused ? '(p)ause' : '(p)ause';
+      this.stage.hud.pauseLink = this.paused ? '(P)AUSE' : '(P)AUSE';
       // SetTimeout, woof. Thing is here we need to leave enough animation frames for the HUD status to be updated
       // before pausing all rendering, otherwise the text update we need above won't be shown to the user.
       setTimeout(function () {
@@ -42047,7 +42073,7 @@ var Game = function () {
   }, {
     key: 'mute',
     value: function mute() {
-      this.stage.hud.muteLink = this.muted ? '(m)ute' : 'unmute (m)';
+      this.stage.hud.muteLink = this.muted ? '(M)UTE' : 'UNMUTE (M)';
       this.muted = !this.muted;
       _Sound2.default.mute(this.muted);
     }
@@ -42427,7 +42453,7 @@ var Game = function () {
         }
 
         if (!isNaN(val) && val > 0) {
-          this.stage.hud.waveStatus = 'Wave ' + val + ' of ' + this.level.waves;
+          this.stage.hud.waveStatus = 'WAVE ' + val + ' OF ' + this.level.waves;
         } else {
           this.stage.hud.waveStatus = '';
         }
@@ -71097,7 +71123,7 @@ module.exports = {"src":["audio.ogg","audio.mp3"],"sprite":{"barkDucks":[0,5774.
 /* 359 */
 /***/ (function(module, exports) {
 
-module.exports = {"normal":[{"id":1,"title":"Level 1","waves":3,"ducks":2,"pointsPerDuck":100,"speed":5,"bullets":3,"radius":60,"time":13},{"id":2,"title":"Level 2","waves":5,"ducks":3,"pointsPerDuck":100,"speed":6,"bullets":4,"radius":60,"time":10},{"id":3,"title":"Level 3","waves":6,"ducks":3,"pointsPerDuck":100,"speed":7,"bullets":4,"radius":60,"time":10},{"id":4,"title":"Level 4","waves":3,"ducks":10,"pointsPerDuck":100,"speed":7,"bullets":11,"radius":60,"time":18},{"id":5,"title":"Level 5","waves":5,"ducks":2,"pointsPerDuck":100,"speed":8,"bullets":3,"radius":60,"time":13}]}
+module.exports = {"normal":[{"id":1,"title":"LEVEL 1","waves":3,"ducks":2,"pointsPerDuck":100,"speed":5,"bullets":3,"radius":60,"time":13},{"id":2,"title":"LEVEL 2","waves":5,"ducks":3,"pointsPerDuck":100,"speed":6,"bullets":4,"radius":60,"time":10},{"id":3,"title":"LEVEL 3","waves":6,"ducks":3,"pointsPerDuck":100,"speed":7,"bullets":4,"radius":60,"time":10},{"id":4,"title":"LEVEL 4","waves":3,"ducks":10,"pointsPerDuck":100,"speed":7,"bullets":11,"radius":60,"time":18},{"id":5,"title":"LEVEL 5","waves":5,"ducks":2,"pointsPerDuck":100,"speed":8,"bullets":3,"radius":60,"time":13}]}
 
 /***/ }),
 /* 360 */
