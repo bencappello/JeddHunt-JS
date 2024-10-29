@@ -43,17 +43,6 @@
       "bullets": 11,
       "radius": 60,
       "time": 18
-    },
-    {
-      "id": 5,
-      "title": "LEVEL 5",
-      "waves": 5,
-      "ducks": 2,
-      "pointsPerDuck": 100,
-      "speed": 8,
-      "bullets": 3,
-      "radius": 60,
-      "time": 13
     }
   ]
 }
