@@ -60535,14 +60535,28 @@ var Stage = function (_Container) {
   }, {
     key: '_setStage',
     value: function _setStage() {
-      var background = new _pixi.extras.AnimatedSprite([_pixi.loader.resources[this.spritesheet].textures['scene/back/0.png']]);
-      background.position.set(0, 0);
+      // Load the city background as the first layer
+      var cityTexture = _pixi.loader.resources[this.spritesheet].textures["scene/city/city.png"];
+      this.cityBackground = new _pixi.Sprite(cityTexture);
+      this.cityBackground.width = MAX_X;
+      this.cityBackground.height = MAX_Y;
 
+      // Create a container for dynamic elements like ducks
+      this.dynamicElements = new _pixi.Container();
+
+      // Load the tree element on top of the ground layer
       var tree = new _pixi.extras.AnimatedSprite([_pixi.loader.resources[this.spritesheet].textures['scene/tree/0.png']]);
       tree.position.set(100, 237);
 
+      // Load the ground layer in front of the city background
+      var groundTexture = _pixi.loader.resources[this.spritesheet].textures["scene/back/0.png"];
+      this.ground = new _pixi.extras.AnimatedSprite([groundTexture]);
+      this.ground.position.set(0, 0);
+
+      this.addChild(this.cityBackground); // Add as the first child for background layer
+      this.addChild(this.dynamicElements); // Add it after the ground, so it appears above it
       this.addChild(tree);
-      this.addChild(background);
+      this.addChild(this.ground); // This will appear in front of the city background
       this.addChild(this.dog);
       this.addChild(this.flashScreen);
       this.addChild(this.hud);
@@ -60572,7 +60586,7 @@ var Stage = function (_Container) {
 
         var findOpts = {
           onComplete: function onComplete() {
-            _this2.setChildIndex(_this2.dog, 0);
+            _this2.setChildIndex(_this2.dog, 2);
             resolve();
           }
         };
@@ -60602,10 +60616,8 @@ var Stage = function (_Container) {
           maxY: MAX_Y
         });
         newDuck.position.set(DUCK_POINTS.ORIGIN.x, DUCK_POINTS.ORIGIN.y);
-        this.addChildAt(newDuck, 0);
-        newDuck.randomFlight({
-          speed: speed
-        });
+        this.dynamicElements.addChild(newDuck); // Add ducks to dynamicElements container
+        newDuck.randomFlight({ speed: speed });
 
         this.ducks.push(newDuck);
       }
