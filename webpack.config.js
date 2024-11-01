@@ -46,6 +46,14 @@ module.exports = {
     inline: true,
     port: 8080
   },
+  stats: {
+    all: true,           // This will output detailed build information
+    warnings: true,      // Include warnings
+    errors: true,        // Include errors
+    timings: true,       // Show timings
+    modules: true,       // Display module information
+    colors: true         // Use colors for easier readability in the terminal
+  },
   plugins: [
     new HardSourcePlugin({
       cacheDirectory: path.join(__dirname, 'node_modules/.cache/hardsource/[confighash]'),
