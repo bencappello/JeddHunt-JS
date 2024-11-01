@@ -1,4 +1,4 @@
-import {Point, Graphics, Container, loader, extras} from 'pixi.js';
+import {Point, Graphics, Container, loader, extras, Sprite} from 'pixi.js';
 import BPromise from 'bluebird';
 import {some as _some} from 'lodash/collection';
 import {delay as _delay} from 'lodash/function';
@@ -143,16 +143,28 @@ class Stage extends Container {
    * @private
    */
   _setStage() {
-    const background = new extras.AnimatedSprite([
-      loader.resources[this.spritesheet].textures['scene/back/0.png']
-    ]);
-    background.position.set(0, 0);
+    // Load the city background as the first layer
+    const cityTexture = loader.resources[this.spritesheet].textures["scene/city/city.png"];
+    this.cityBackground = new Sprite(cityTexture);
+    this.cityBackground.width = MAX_X;
+    this.cityBackground.height = MAX_Y;
 
+    // Create a container for dynamic elements like ducks
+    this.dynamicElements = new Container();
+
+    // Load the tree element on top of the ground layer
     const tree = new extras.AnimatedSprite([loader.resources[this.spritesheet].textures['scene/tree/0.png']]);
     tree.position.set(100, 237);
 
+    // Load the ground layer in front of the city background
+    const groundTexture = loader.resources[this.spritesheet].textures["scene/back/0.png"];
+    this.ground = new extras.AnimatedSprite([groundTexture]);
+    this.ground.position.set(0, 0);
+
+    this.addChild(this.cityBackground); // Add as the first child for background layer
+    this.addChild(this.dynamicElements); // Add it after the ground, so it appears above it
     this.addChild(tree);
-    this.addChild(background);
+    this.addChild(this.ground); // This will appear in front of the city background
     this.addChild(this.dog);
     this.addChild(this.flashScreen);
     this.addChild(this.hud);
@@ -177,7 +189,7 @@ class Stage extends Container {
 
       const findOpts = {
         onComplete: () => {
-          this.setChildIndex(this.dog, 0);
+          this.setChildIndex(this.dog, 2);
           resolve();
         }
       };
@@ -204,10 +216,8 @@ class Stage extends Container {
         maxY: MAX_Y
       });
       newDuck.position.set(DUCK_POINTS.ORIGIN.x, DUCK_POINTS.ORIGIN.y);
-      this.addChildAt(newDuck, 0);
-      newDuck.randomFlight({
-        speed
-      });
+      this.dynamicElements.addChild(newDuck); // Add ducks to dynamicElements container
+      newDuck.randomFlight({ speed });
 
       this.ducks.push(newDuck);
     }
