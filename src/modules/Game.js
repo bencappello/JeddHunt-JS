@@ -1,5 +1,5 @@
-import {loader, autoDetectRenderer} from 'pixi.js';
-import {remove as _remove} from 'lodash/array';
+import { loader, autoDetectRenderer } from 'pixi.js';
+import { remove as _remove } from 'lodash/array';
 import levels from '../data/levels.json';
 import Stage from './Stage';
 import sound from './Sound';
@@ -44,7 +44,7 @@ class Game {
   constructor(opts) {
     this.spritesheet = opts.spritesheet;
     this.loader = loader;
-    this.renderer =  autoDetectRenderer(window.innerWidth, window.innerHeight, {
+    this.renderer = autoDetectRenderer(window.innerWidth, window.innerHeight, {
       backgroundColor: BLUE_SKY_COLOR
     });
     this.levelIndex = 0;
@@ -69,7 +69,7 @@ class Game {
 
     if (this.stage && this.stage.hud) {
 
-      if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'ducksMissed')) {
+      if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'ducksMissed')) {
         this.stage.hud.createTextureBasedCounter('ducksMissed', {
           texture: 'hud/score-live/0.png',
           spritesheet: this.spritesheet,
@@ -92,12 +92,12 @@ class Game {
 
     if (this.stage && this.stage.hud) {
 
-      if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'ducksShot')) {
+      if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'ducksShot')) {
         this.stage.hud.createTextureBasedCounter('ducksShot', {
           texture: 'hud/score-dead/0.png',
           spritesheet: this.spritesheet,
           location: Stage.deadDuckStatusBoxLocation(),
-          rowMax:20,
+          rowMax: 20,
           max: 20
         });
       }
@@ -125,7 +125,7 @@ class Game {
 
     if (this.stage && this.stage.hud) {
 
-      if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'bullets')) {
+      if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'bullets')) {
         this.stage.hud.createTextureBasedCounter('bullets', {
           texture: 'hud/bullet/0.png',
           spritesheet: this.spritesheet,
@@ -160,7 +160,7 @@ class Game {
 
     if (this.stage && this.stage.hud) {
 
-      if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'score')) {
+      if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'score')) {
         this.stage.hud.createTextBox('score', {
           style: {
             fontFamily: 'Press Start 2P',
@@ -201,7 +201,7 @@ class Game {
 
     if (this.stage && this.stage.hud) {
 
-      if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'waveStatus')) {
+      if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'waveStatus')) {
         this.stage.hud.createTextBox('waveStatus', {
           style: {
             fontFamily: 'Press Start 2P',
@@ -242,13 +242,19 @@ class Game {
 
     if (this.stage && this.stage.hud) {
 
-      if (!Object.prototype.hasOwnProperty.call(this.stage.hud,'gameStatus')) {
+      if (!Object.prototype.hasOwnProperty.call(this.stage.hud, 'gameStatus')) {
         this.stage.hud.createTextBox('gameStatus', {
           style: {
             fontFamily: 'Press Start 2P',
             fontSize: '40px',
             align: 'left',
-            fill: 'white'
+            fill: 'white',
+            dropShadow: true,
+            dropShadowColor: 'black',
+            dropShadowBlur: 4,           // No blur for a pixelated effect
+            dropShadowDistance: 4,       // Small offset for a blocky shadow
+            stroke: 'black',             // Adds a black stroke for extra outline
+            strokeThickness: 2           // Thickness of the stroke 
           },
           location: Stage.gameStatusBoxLocation()
         });
@@ -341,7 +347,7 @@ class Game {
     try {
       const highScoresRef = database.ref("highScores");
       const snapshot = await highScoresRef.orderByChild("score").limitToLast(10).once("value");
-  
+
       const highScores = [];
       snapshot.forEach((data) => {
         highScores.push({
@@ -349,7 +355,7 @@ class Game {
           score: data.val().score,
         });
       });
-  
+
       // Sort high scores in descending order
       return highScores.reverse();
     } catch (error) {
@@ -361,7 +367,7 @@ class Game {
   saveHighScore(score, playerName) {
     const highScoresRef = firebase.database().ref("highScores");
     const newScoreRef = highScoresRef.push();
-  
+
     newScoreRef.set(
       {
         name: playerName,
@@ -392,7 +398,7 @@ class Game {
   async win() {
     sound.play("champ");
     // this.gameStatus = "You Win!";
-  
+
     // Show the win screen and proceed based on high score status
     this.showEndGameScreen(
       "YOU WON!\nAS MUCH AS YOU CAN WIN AT\nA GAME CALLED JEDD HUNT.",
@@ -406,11 +412,11 @@ class Game {
       }
     );
   }
-  
+
   async loss() {
     sound.play("loserSound");
     // this.gameStatus = "You Lose";
-  
+
     // Show the lose screen and then display the high scores page
     this.showEndGameScreen(
       "YOU LOSE\nAS MUCH AS YOU CAN LOSE AT\nA GAME CALLED JEDD HUNT.",
@@ -445,26 +451,26 @@ class Game {
     namePrompt.style.alignItems = "center";
     namePrompt.style.justifyContent = "center";
     namePrompt.style.fontFamily = "'Press Start 2P', sans-serif";  // Retro arcade font
-  
+
     // High score title
     const highScoreTitle = document.createElement("h2");
     highScoreTitle.innerText = "HIGH SCORE!";
     highScoreTitle.style.marginBottom = "10px";
     highScoreTitle.style.textShadow = "2px 2px 4px #ff0000";  // Red shadow for retro effect
-  
+
     // Display the player's score
     const scoreDisplay = document.createElement("div");
     scoreDisplay.innerText = `SCORE: ${this.score}`;
     scoreDisplay.style.marginBottom = "20px";
     scoreDisplay.style.fontSize = "28px";
     scoreDisplay.style.textShadow = "2px 2px 4px #000";  // Black shadow for readability
-  
+
     // Title for entering initials
     const initialsTitle = document.createElement("h2");
     initialsTitle.innerText = "ENTER YOUR INITIALS";
     initialsTitle.style.marginBottom = "20px";
     initialsTitle.style.textShadow = "2px 2px 4px #ff0000";  // Red shadow for retro effect
-  
+
     const inputWrapper = document.createElement("div");
     inputWrapper.style.marginTop = "20px";
     const nameInput = document.createElement("input");
@@ -481,7 +487,7 @@ class Game {
     nameInput.style.padding = "10px";
     nameInput.style.marginRight = "10px";
     nameInput.style.width = "80px";  // Make it visually fit 3 characters nicely
-  
+
     const submitButton = document.createElement("button");
     submitButton.textContent = "OK";
     submitButton.style.fontFamily = "'Press Start 2P', sans-serif"; // Retro arcade font
@@ -491,18 +497,18 @@ class Game {
     submitButton.style.border = "4px solid yellow";  // Bold yellow border
     submitButton.style.padding = "10px 20px";
     submitButton.style.cursor = "pointer";
-  
+
     submitButton.addEventListener("click", async () => {
       const playerName = (nameInput.value || "AAA").toUpperCase(); // Default to "AAA" if empty
       await this.saveHighScore(this.score, playerName);
-  
+
       document.body.removeChild(namePrompt);
-  
+
       // Fetch the updated high scores and show them
       const highScores = await this.getHighScores();
       this.showHighScores(highScores);
     });
-  
+
     inputWrapper.appendChild(nameInput);
     inputWrapper.appendChild(submitButton);
     namePrompt.appendChild(highScoreTitle); // Add high score title
@@ -530,7 +536,7 @@ class Game {
     endGameScreen.style.fontFamily = "'Press Start 2P', sans-serif";
     endGameScreen.style.textAlign = "center";
     endGameScreen.style.cursor = "pointer"; // Indicate that clicking is allowed
-  
+
     // Display the end game message
     const messageParts = message.split('\n'); // Split the message to handle line breaks
     messageParts.forEach((part, index) => {
@@ -541,10 +547,10 @@ class Game {
       messageElement.style.textShadow = "2px 2px 4px #ff0000"; // Red shadow for retro effect
       endGameScreen.appendChild(messageElement);
     });
-  
+
     // Add the end game screen to the document
     document.body.appendChild(endGameScreen);
-  
+
     // Define the function to proceed to the next step
     const proceedToNextStep = () => {
       if (endGameScreen) {
@@ -552,16 +558,16 @@ class Game {
       }
       nextStepCallback();
     };
-  
+
     // Set up a timeout to proceed after 2 seconds
     const timeoutId = setTimeout(proceedToNextStep, 6000);
-  
+
     // Allow clicking anywhere on the screen to proceed immediately
     endGameScreen.addEventListener("click", () => {
       clearTimeout(timeoutId); // Clear the timeout if the user clicks
       proceedToNextStep();
     });
-  }  
+  }
 
   showHighScores(highScores) {
     // Create a div element for the high scores screen
@@ -580,14 +586,14 @@ class Game {
     highScoresScreen.style.justifyContent = "center";
     highScoresScreen.style.fontFamily = "'Press Start 2P', sans-serif";
     highScoresScreen.style.textAlign = "center";
-  
+
     // High scores title
     const title = document.createElement("h2");
     title.innerText = "HIGH SCORES";
     title.style.marginBottom = "20px";
     title.style.textShadow = "2px 2px 4px #ff0000";
     highScoresScreen.appendChild(title);
-  
+
     // Display each high score
     highScores.forEach((scoreEntry, index) => {
       const scoreElement = document.createElement("div");
@@ -597,13 +603,13 @@ class Game {
       scoreElement.style.textShadow = "2px 2px 4px #000";
       highScoresScreen.appendChild(scoreElement);
     });
-  
+
     // Buttons container
     const buttonsContainer = document.createElement("div");
     buttonsContainer.style.display = "flex";
     buttonsContainer.style.gap = "20px";
     buttonsContainer.style.marginTop = "30px";
-  
+
     // Add a replay button
     const replayButton = document.createElement("button");
     replayButton.textContent = "PLAY AGAIN";
@@ -616,12 +622,12 @@ class Game {
     replayButton.style.fontSize = "16px";
     replayButton.style.cursor = "pointer";
     replayButton.style.textTransform = "uppercase";
-  
+
     replayButton.addEventListener("click", () => {
       document.body.removeChild(highScoresScreen);
       window.location = window.location.pathname;
     });
-  
+
     // Add a "Hire Jedd" button
     const hireButton = document.createElement("button");
     hireButton.textContent = "HIRE\nJEDD";
@@ -768,7 +774,7 @@ class Game {
   }
 
   removeActiveSound(soundId) {
-    _remove(this.activeSounds, function(item) {
+    _remove(this.activeSounds, function (item) {
       return item === soundId;
     });
   }
