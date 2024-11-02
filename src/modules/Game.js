@@ -536,6 +536,7 @@ class Game {
   
     // High scores title
     const title = document.createElement("h2");
+    title.className = "high-score-title";
     title.innerText = "HIGH SCORES";
     highScoresScreen.appendChild(title);
   
