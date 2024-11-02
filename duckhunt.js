@@ -42487,7 +42487,13 @@ var Game = function () {
               fontFamily: 'Press Start 2P',
               fontSize: '40px',
               align: 'left',
-              fill: 'white'
+              fill: 'white',
+              dropShadow: true,
+              dropShadowColor: 'black',
+              dropShadowBlur: 4, // No blur for a pixelated effect
+              dropShadowDistance: 4, // Small offset for a blocky shadow
+              stroke: 'black', // Adds a black stroke for extra outline
+              strokeThickness: 2 // Thickness of the stroke 
             },
             location: _Stage2.default.gameStatusBoxLocation()
           });
