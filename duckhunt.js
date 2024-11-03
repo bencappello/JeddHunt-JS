@@ -41997,7 +41997,7 @@ var Game = function () {
   }, {
     key: 'mute',
     value: function mute() {
-      this.stage.hud.muteLink = this.muted ? '(M)UTE' : 'UNMUTE (M)';
+      this.stage.hud.muteLink = this.muted ? '(M)UTE' : 'UN(M)UTE';
       this.muted = !this.muted;
       _Sound2.default.mute(this.muted);
     }
