@@ -703,7 +703,7 @@ class Game {
   }
 
   mute() {
-    this.stage.hud.muteLink = this.muted ? '(M)UTE' : 'UNMUTE (M)';
+    this.stage.hud.muteLink = this.muted ? '(M)UTE' : 'UN(M)UTE';
     this.muted = !this.muted;
     sound.mute(this.muted);
   }
