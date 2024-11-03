@@ -60481,7 +60481,7 @@ var Stage = function (_Container) {
       // Load the ground layer in front of the city background
       var groundTexture = _pixi.loader.resources[this.spritesheet].textures["scene/back/0.png"];
       this.ground = new _pixi.extras.AnimatedSprite([groundTexture]);
-      this.ground.position.set(0, 0);
+      this.ground.position.set(0, 2);
 
       this.addChild(this.cityBackground); // Add as the first child for background layer
       this.addChild(this.dynamicElements); // Add it after the ground, so it appears above it
