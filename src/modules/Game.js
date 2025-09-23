@@ -7,6 +7,7 @@ import levelCreator from '../libs/levelCreator.js';
 import utils from '../libs/utils';
 import firebase from 'firebase/app';
 import 'firebase/database'; // Import the database module
+import 'firebase/auth';
 
 // Your web app's Firebase configuration (replace with your actual config)
 const firebaseConfig = {
@@ -24,6 +25,27 @@ firebase.initializeApp(firebaseConfig);
 
 // Get a reference to the database
 const database = firebase.database();
+
+// Ensure we are authenticated (anonymous) so secure rules that require auth pass
+try {
+  if (firebase.auth) {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        firebase.auth().signInAnonymously().catch(function(error) {
+          console.error('Anonymous auth failed:', error);
+        });
+      }
+    });
+    // Kick off sign-in immediately in case no user is present yet
+    if (!firebase.auth().currentUser) {
+      firebase.auth().signInAnonymously().catch(function(error) {
+        console.error('Anonymous auth init failed:', error);
+      });
+    }
+  }
+} catch (e) {
+  console.error('Auth initialization error:', e);
+}
 const BLUE_SKY_COLOR = 0x64b0ff;
 const PINK_SKY_COLOR = 0xfbb4d4;
 const SUCCESS_RATIO = 0.6;
@@ -58,6 +80,37 @@ class Game {
     this.quackingSoundId = null;
     this.levels = levels.normal;
     return this;
+  }
+
+  // Ensure there is a signed-in user (anonymous) before privileged DB operations
+  ensureAuthenticated() {
+    return new Promise((resolve) => {
+      try {
+        const auth = firebase.auth && firebase.auth();
+        if (!auth) {
+          // If auth SDK is unavailable, resolve to continue gracefully (reads may be public)
+          resolve(null);
+          return;
+        }
+        const current = auth.currentUser;
+        if (current) {
+          resolve(current);
+          return;
+        }
+        const unsubscribe = auth.onAuthStateChanged(function(user) {
+          if (user) {
+            unsubscribe && unsubscribe();
+            resolve(user);
+          }
+        });
+        auth.signInAnonymously().catch(function(error) {
+          console.error('Anonymous auth attempt failed:', error);
+        });
+      } catch (err) {
+        console.error('ensureAuthenticated error:', err);
+        resolve(null);
+      }
+    });
   }
 
   get ducksMissed() {
@@ -364,23 +417,19 @@ class Game {
     }
   }
 
-  saveHighScore(score, playerName) {
+  async saveHighScore(score, playerName) {
+    await this.ensureAuthenticated();
     const highScoresRef = firebase.database().ref("highScores");
     const newScoreRef = highScoresRef.push();
-
-    newScoreRef.set(
-      {
+    try {
+      await newScoreRef.set({
         name: playerName,
         score: score,
-      },
-      (error) => {
-        if (error) {
-          console.error("Error saving high score:", error);
-        } else {
-          console.log("High score saved successfully!");
-        }
-      }
-    );
+      });
+      console.log("High score saved successfully!");
+    } catch (error) {
+      console.error("Error saving high score:", error);
+    }
   }
 
   // win() {
