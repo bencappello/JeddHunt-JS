@@ -427,8 +427,10 @@ class Game {
         score: score,
       });
       console.log("High score saved successfully!");
+      return true;
     } catch (error) {
       console.error("Error saving high score:", error);
+      return false;
     }
   }
 
@@ -514,14 +516,29 @@ class Game {
   
     const submitButton = document.createElement("button");
     submitButton.textContent = "OK";
+    
+    // Error message element (hidden by default)
+    const errorMessage = document.createElement("div");
+    errorMessage.style.color = "#ff5555";
+    errorMessage.style.marginTop = "10px";
+    errorMessage.style.fontSize = "16px";
+    errorMessage.style.display = "none";
+    errorMessage.textContent = "Couldn’t save score. Please try again.";
   
     // Event listener for the submit button
     submitButton.addEventListener("click", async () => {
       const playerName = (nameInput.value || "AAA").toUpperCase(); // Default to "AAA" if empty
-      await this.saveHighScore(this.score, playerName);
-  
+      submitButton.disabled = true;
+      errorMessage.style.display = "none";
+      const success = await this.saveHighScore(this.score, playerName);
+      if (!success) {
+        errorMessage.style.display = "block";
+        submitButton.disabled = false;
+        return;
+      }
+
       document.body.removeChild(namePrompt);
-  
+
       // Fetch the updated high scores and show them
       const highScores = await this.getHighScores();
       this.showHighScores(highScores);
@@ -533,6 +550,7 @@ class Game {
     namePrompt.appendChild(scoreDisplay);   // Display the player's score
     namePrompt.appendChild(initialsTitle);  // Add title for initials
     namePrompt.appendChild(inputWrapper);
+    namePrompt.appendChild(errorMessage);
     document.body.appendChild(namePrompt);
   }  
 
