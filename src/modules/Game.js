@@ -532,7 +532,10 @@ class Game {
   
     // Event listener for the submit button
     submitButton.addEventListener("click", async () => {
-      const playerName = (nameInput.value || "AAA").toUpperCase(); // Default to "AAA" if empty
+      // Sanitize initials to pass RTDB validation rules: 1-3 uppercase A-Z only
+      const raw = (nameInput.value || "");
+      const cleaned = raw.replace(/[^a-z]/gi, "").toUpperCase().slice(0, 3);
+      const playerName = cleaned || "AAA"; // Default to "AAA" if empty after sanitize
       submitButton.disabled = true;
       errorMessage.style.display = "none";
       const result = await this.saveHighScore(this.score, playerName);
