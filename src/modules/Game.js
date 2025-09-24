@@ -419,6 +419,11 @@ class Game {
 
   async saveHighScore(score, playerName) {
     await this.ensureAuthenticated();
+    const auth = firebase.auth && firebase.auth();
+    if (!auth || !auth.currentUser) {
+      console.error("Error saving high score: not authenticated. Ensure Anonymous Auth is enabled and domain is authorized.");
+      return false;
+    }
     const highScoresRef = firebase.database().ref("highScores");
     const newScoreRef = highScoresRef.push();
     try {
@@ -532,12 +537,22 @@ class Game {
       errorMessage.style.display = "none";
       const success = await this.saveHighScore(this.score, playerName);
       if (!success) {
+        // Enrich the message if we can detect common causes
+        const auth = firebase.auth && firebase.auth();
+        if (!auth || !auth.currentUser) {
+          errorMessage.textContent = "Couldn’t save score (not signed in). Enable Anonymous Auth + authorize domain.";
+        } else {
+          errorMessage.textContent = "Couldn’t save score. Please try again.";
+        }
         errorMessage.style.display = "block";
         submitButton.disabled = false;
         return;
       }
 
       document.body.removeChild(namePrompt);
+
+      // Small delay to ensure we read the latest committed data in edge cases
+      await new Promise(function(resolve){ setTimeout(resolve, 300); });
 
       // Fetch the updated high scores and show them
       const highScores = await this.getHighScores();
