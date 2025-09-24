@@ -422,7 +422,7 @@ class Game {
     const auth = firebase.auth && firebase.auth();
     if (!auth || !auth.currentUser) {
       console.error("Error saving high score: not authenticated. Ensure Anonymous Auth is enabled and domain is authorized.");
-      return false;
+      return { success: false };
     }
     const highScoresRef = firebase.database().ref("highScores");
     const newScoreRef = highScoresRef.push();
@@ -432,10 +432,10 @@ class Game {
         score: score,
       });
       console.log("High score saved successfully!");
-      return true;
+      return { success: true, key: newScoreRef.key };
     } catch (error) {
       console.error("Error saving high score:", error);
-      return false;
+      return { success: false };
     }
   }
 
@@ -535,8 +535,8 @@ class Game {
       const playerName = (nameInput.value || "AAA").toUpperCase(); // Default to "AAA" if empty
       submitButton.disabled = true;
       errorMessage.style.display = "none";
-      const success = await this.saveHighScore(this.score, playerName);
-      if (!success) {
+      const result = await this.saveHighScore(this.score, playerName);
+      if (!result || !result.success) {
         // Enrich the message if we can detect common causes
         const auth = firebase.auth && firebase.auth();
         if (!auth || !auth.currentUser) {
@@ -551,8 +551,15 @@ class Game {
 
       document.body.removeChild(namePrompt);
 
-      // Small delay to ensure we read the latest committed data in edge cases
-      await new Promise(function(resolve){ setTimeout(resolve, 300); });
+      // Confirm the record is readable before refreshing leaderboard (guards against eventual consistency)
+      try {
+        if (result.key) {
+          await firebase.database().ref("highScores").child(result.key).once("value");
+        }
+      } catch (e) {
+        // Fallback to a short delay if direct read fails for any reason
+        await new Promise(function(resolve){ setTimeout(resolve, 300); });
+      }
 
       // Fetch the updated high scores and show them
       const highScores = await this.getHighScores();
